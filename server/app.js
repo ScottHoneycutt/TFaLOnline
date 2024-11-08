@@ -13,7 +13,8 @@ const router = require('./router.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 //Connecting server to database. -SJH
-const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/DomoMaker';
+const dbURI = process.env.MONGODB_URI || 
+'mongodb+srv://sjh3552:STOP4utogen!@cluster0.onrz2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(dbURI).catch((err) => {
   if (err) {
     console.log('Could not connect to database');
