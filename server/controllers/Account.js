@@ -1,16 +1,12 @@
 const models = require('../models');
 
-const { Account } = models;
+const { Account, Profile } = models;
 
 // Sends back the login page -SJH
 const loginPage = (req, res) => res.render('login');
 
 //Sends back the account page -SJH
 const accountPage = (req, res) => res.render('account');
-
-const getAccountData = (req, res) => {
-  
-}
 
 //Logs the user out of their account -SJH
 const logout = (req, res) => {
@@ -35,7 +31,7 @@ const login = (req, res) => {
 
     // Creating login session -SJH
     req.session.account = Account.toAPI(account);
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/game' });
   });
 };
 
@@ -64,7 +60,7 @@ const changePassword = async (req, res) => {
     await account.save();
     // Creating login session info -SJH
     req.session.account = account;
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/game' });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'An error occured!' });
@@ -87,12 +83,26 @@ const signup = async (req, res) => {
   }
 
   try {
+    //Generating account object -SJH
     const hash = await Account.generateHash(pass);
     const newAccount = new Account({ username, password: hash });
     await newAccount.save();
+
     // Creating login session info -SJH
     req.session.account = Account.toAPI(newAccount);
-    return res.json({ redirect: '/maker' });
+
+    //Creating profile object -SJH
+    const newProfile = new Profile({ 
+      username: username,
+      premium: false,
+      nickname: username,
+      gamesPlayed: 0,
+      owner:  req.session.account._id})
+    await newProfile.save();
+
+    //Redirect to the default logged-in page -SJH
+    return res.json({ redirect: '/game' });
+
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {

@@ -1,4 +1,5 @@
-const helper = require('./helper.js'); const React = require('react');
+const helper = require('./helper.js'); 
+const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
@@ -23,7 +24,7 @@ const DomoForm = (props) => {
         <form id="domoForm"
             onSubmit={(e) => handleDomo(e, props.triggerReload)}
             name="domoForm"
-            action="/maker" method="POST"
+            action="/game" method="POST"
             className="domoForm"
         >
             <label htmlFor="name">Name: </label>
@@ -86,7 +87,8 @@ const App = () => {
 };
 
 const init = () => {
-  const root = createRoot(document.getElementById('app')); root.render(<App />);
+  const root = createRoot(document.getElementById('app')); 
+  root.render(<App />);
 };
 
 window.onload = init;

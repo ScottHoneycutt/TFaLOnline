@@ -6,21 +6,27 @@ const setUserName = (name) => _.escape(name).trim();
 
 // Define what a profile includes. -SJH
 const Profile = new mongoose.Schema({
-  gamesPlayed: {
-    type: Number,
-    min: 0,
+  username: {
+    type: String,
     required: true,
+    trim: true,
+    set: setUserName,
   },
   premium: {
     type: Boolean,
     default: false,
     required: false,
   },
-  username: {
+  nickname: {
     type: String,
     required: true,
     trim: true,
     set: setUserName,
+  },
+  gamesPlayed: {
+    type: Number,
+    min: 0,
+    required: true,
   },
   owner: {
     type: mongoose.Schema.ObjectId,
@@ -34,12 +40,12 @@ const Profile = new mongoose.Schema({
 });
 
 // Converts the highscore into just the data needed for the controller to send to the client -SJH
-HighscoreSchema.statics.toAPI = (doc) => ({
-    gamesPlayed: doc.gamesPlayed,
-    premium: doc.premium,
+Profilechema.statics.toAPI = (doc) => ({
+  gamesPlayed: doc.gamesPlayed,
+  premium: doc.premium,
   username: doc.username,
   createdDate: doc.createdDate
 });
 
-const HighscoreModel = mongoose.model('Highscore', HighscoreSchema);
-module.exports = HighscoreModel;
+const ProfileModel = mongoose.model('Highscore', ProfileSchema);
+module.exports = ProfileModel;
