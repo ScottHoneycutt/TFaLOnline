@@ -32,7 +32,7 @@ const HighscoreSchema = new mongoose.Schema({
 HighscoreSchema.statics.toAPI = (doc) => ({
   score: doc.score,
   username: doc.username,
-  createdDate: doc.createdDate
+  createdDate: doc.createdDate,
 });
 
 const HighscoreModel = mongoose.model('Highscore', HighscoreSchema);

@@ -5,7 +5,7 @@ const _ = require('underscore');
 const setUserName = (name) => _.escape(name).trim();
 
 // Define what a profile includes. -SJH
-const Profile = new mongoose.Schema({
+const ProfileSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -40,11 +40,11 @@ const Profile = new mongoose.Schema({
 });
 
 // Converts the highscore into just the data needed for the controller to send to the client -SJH
-Profilechema.statics.toAPI = (doc) => ({
+ProfileSchema.statics.toAPI = (doc) => ({
   gamesPlayed: doc.gamesPlayed,
   premium: doc.premium,
   username: doc.username,
-  createdDate: doc.createdDate
+  createdDate: doc.createdDate,
 });
 
 const ProfileModel = mongoose.model('Highscore', ProfileSchema);

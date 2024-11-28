@@ -5,10 +5,10 @@ const { Account, Profile } = models;
 // Sends back the login page -SJH
 const loginPage = (req, res) => res.render('login');
 
-//Sends back the account page -SJH
+// Sends back the account page -SJH
 const accountPage = (req, res) => res.render('account');
 
-//Logs the user out of their account -SJH
+// Logs the user out of their account -SJH
 const logout = (req, res) => {
   req.session.destroy();
   return res.redirect('/');
@@ -35,13 +35,13 @@ const login = (req, res) => {
   });
 };
 
-//Called when the user wants to change their password. -SJH
+// Called when the user wants to change their password. -SJH
 const changePassword = async (req, res) => {
   const { account } = req.session;
   const pass = `${req.body.pass}`;
   const pass2 = `${req.body.pass2}`;
 
-  //User must be logged in to change password -SJH
+  // User must be logged in to change password -SJH
   if (!account) {
     return res.status(400).json({ error: 'Must be logged in to change password!' });
   }
@@ -65,7 +65,7 @@ const changePassword = async (req, res) => {
     console.log(err);
     return res.status(500).json({ error: 'An error occured!' });
   }
-}
+};
 
 // Called when a client tries to add a new login set of data to the site -SJH
 const signup = async (req, res) => {
@@ -83,7 +83,7 @@ const signup = async (req, res) => {
   }
 
   try {
-    //Generating account object -SJH
+    // Generating account object -SJH
     const hash = await Account.generateHash(pass);
     const newAccount = new Account({ username, password: hash });
     await newAccount.save();
@@ -91,18 +91,18 @@ const signup = async (req, res) => {
     // Creating login session info -SJH
     req.session.account = Account.toAPI(newAccount);
 
-    //Creating profile object -SJH
-    const newProfile = new Profile({ 
-      username: username,
+    // Creating profile object -SJH
+    const newProfile = new Profile({
+      username,
       premium: false,
       nickname: username,
       gamesPlayed: 0,
-      owner:  req.session.account._id})
+      owner: req.session.account._id,
+    });
     await newProfile.save();
 
-    //Redirect to the default logged-in page -SJH
+    // Redirect to the default logged-in page -SJH
     return res.json({ redirect: '/game' });
-
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {

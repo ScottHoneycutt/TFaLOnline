@@ -43,7 +43,9 @@
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
+    "howler": "^2.2.4",
     "mongoose": "^8.2.3",
+    "pixi.js": "^8.6.1",
     "redis": "^4.6.13",
     "serve-favicon": "^2.5.0",
     "underscore": "^1.13.6"
