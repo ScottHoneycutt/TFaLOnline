@@ -70,10 +70,10 @@ const App = () => {
   return (
     <div>
       <div id="profileInfo">
-        <MyProfile />
+        <MyProfile/>
       </div>
       <div id="scores">
-        <MyScoreList scores={[]} reloadScores={reloadScores} />
+        <MyScoreList scores={[]} reloadScores={reloadScores}/>
       </div>
     </div>);
 };
@@ -81,7 +81,7 @@ const App = () => {
 //Runs on window load -SJH
 const init = () => {
   const root = createRoot(document.getElementById('app')); 
-  root.render(<App />);
+  root.render(<App/>);
 };
 
 window.onload = init;

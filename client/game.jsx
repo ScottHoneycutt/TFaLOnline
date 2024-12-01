@@ -4,23 +4,21 @@ const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 const { Player, ExtraLifePowerup, ExtraScorePowerup, Grid } = require('./gameClasses.js');
 const PIXI = require('pixi.js');
+require("pixi.js/unsafe-eval");
 const { Howl } = require('howler');
+//Requiring media files -SJH
+require
 
-//Creating the pixijs app----
-const app = new PIXI.Application({
-    width: 800,
-    height: 800
-});
 
+//PixiJS app -SJH
+let app;
 //Window dimensions -SJH
-const sceneWidth = app.view.width;
-const sceneHeight = app.view.height;
-
+let sceneWidth;
+let sceneHeight;
 //Scenes----
 let menuScene;
 let gameScene;
 let gameOverScene;
-
 //Important game variables----
 let livesRemaining = 3;
 let score = 0;
@@ -31,21 +29,17 @@ let timeSinceLastTick = 0;
 let tickDelay = 2;
 let tickCycles = 0;
 let paused = true;
-
 //Powerup variables----
 let currentPowerup;
 let powerupActive = false;
-
 //Movement cooldown variables----
 let moveCooldown = .1;
 let currentCooldown = 0;
 let isOnCooldown = false;
-
 //UI elements that need to be on the script-level----
 let scoreDisplay;
 let livesDisplay;
 let gameOverScoreLabel;
-
 //Sound effects----
 let moveSound;
 let dieSound;
@@ -81,11 +75,11 @@ const callMoveMethods = (keyCode) => {
         }
 
         //Check to see if the player is on solid ground or not (lose a life if not) -SJH
-        if (player.checkCurrentTile()){
+        if (player.checkCurrentTile()) {
             reduceLivesBy(1);
         }
         //Check to see if the player is collecting a powerup -SJH
-        if (powerupActive){
+        if (powerupActive) {
             if (currentPowerup.checkIfCollected(player.gridLocationX, player.gridLocationY)) {
                 //Add life or increase score depending upon the powerup type -SJH
                 if (typeof currentPowerup === ExtraLifePowerup) {
@@ -277,17 +271,17 @@ const gameLoop = () => {
                     if (random == 0) {
                         //Extra life at a random tile location----
                         currentPowerup = new ExtraLifePowerup(
-                            Math.floor(Math.random() * 13), 
-                            Math.floor(Math.random() * 13), 
-                            gameScene, 
+                            Math.floor(Math.random() * 13),
+                            Math.floor(Math.random() * 13),
+                            gameScene,
                             powerupSound);
                     }
                     else {
                         //Extra score at a random tile location----
                         currentPowerup = new ExtraScorePowerup(
-                            Math.floor(Math.random() * 13), 
-                            Math.floor(Math.random() * 13), 
-                            gameScene, 
+                            Math.floor(Math.random() * 13),
+                            Math.floor(Math.random() * 13),
+                            gameScene,
                             powerupSound);
                     }
                     //Collecting the powerup if it just happened to spawn on top of the player-----
@@ -376,7 +370,7 @@ const populateSceneUIs = () => {
     scoreDisplay.text = `Score: ${score}`;
 
     //Adding the score icon----
-    let scoreSymbol = new PIXI.Sprite(app.loader.resources["gameMedia/extraScore.png"].texture);
+    let scoreSymbol = PIXI.Sprite.from(["/assets/img/extraScore.png"]);
     scoreSymbol.x = 305;
     scoreSymbol.y = 5;
     gameScene.addChild(scoreSymbol);
@@ -390,7 +384,7 @@ const populateSceneUIs = () => {
     livesDisplay.text = `Lives Remaining: ${livesRemaining}`;
 
     //Adding the lives icon----
-    let lifeSymbol = new PIXI.Sprite(app.loader.resources["gameMedia/extraLife.png"].texture);
+    let lifeSymbol = PIXI.Sprite.from(["/assets/img/extraLife.png"]);
     lifeSymbol.x = 5;
     lifeSymbol.y = 5;
     gameScene.addChild(lifeSymbol);
@@ -479,25 +473,50 @@ const setup = () => {
 }
 
 //=================================================================================================
+//REACT ELEMENTS -SJH -----------------
+//=================================================================================================
+const Game = () => {
+    const [reloadScores, setReloadScores] = useState(false);
+    return (
+        <div id="game">
+        </div>);
+};
+
+//=================================================================================================
 //SET THINGS INTO MOTION AFTER FUNCTIONS AND VARIABLES HAVE BEEN INITIALIZED -SJH -----------------
 //=================================================================================================
 
-//Loading in images----
-app.loader.add([
-    "gameMedia/extraLife.png",
-    "gameMedia/extraScore.png",
-    "gameMedia/player.png",
-    "gameMedia/tileSafe.png",
-    "gameMedia/tileHazard.png",
-    "gameMedia/tileDanger.png",
-]);
-app.loader.onComplete.add(setup);
-app.loader.load();
+//Create the game canvas and put it on the HTML page -SJH
+const init = async () => {
+    console.log("start of init (not app.init)");
+    //Creating the pixijs app----
+    app = new PIXI.Application();
+    await app.init({ width: 800, height: 800 });
+    console.log("app.init done");
 
+    //Caching window dimensions -SJH
+    sceneWidth = app.canvas.width;
+    sceneHeight = app.canvas.height;
 
-const init = () => {
+    console.log("loading assets");
+    //Loading in images----
+    await PIXI.Assets.load([
+        "/assets/img/extraLife.png",
+        "/assets/img/extraScore.png",
+        "/assets/img//player.png",
+        "/assets/img/tileSafe.png",
+        "/assets/img/tileHazard.png",
+        "/assets/img/tileDanger.png",
+    ]);
+
+    console.log("running setup");
+    setup();
+    console.log("end of setup");
+
     const gameArea = createRoot(document.querySelector('#gameArea'));
-    gameArea.appendChild(app.view);
+    gameArea.render(<Game />)
+    //document.querySelector("#game").appendChild(app.canvas);
+    console.log("end of init");
 };
 
 window.onload = init;

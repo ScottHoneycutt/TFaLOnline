@@ -47,5 +47,5 @@ ProfileSchema.statics.toAPI = (doc) => ({
   createdDate: doc.createdDate,
 });
 
-const ProfileModel = mongoose.model('Highscore', ProfileSchema);
+const ProfileModel = mongoose.model('Profile', ProfileSchema);
 module.exports = ProfileModel;

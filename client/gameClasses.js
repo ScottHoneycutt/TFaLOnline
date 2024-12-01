@@ -9,7 +9,7 @@ class Player extends PIXI.Sprite {
 
     constructor(grid, moveSound) {
         //The sprite and its position on screen----
-        super(app.loader.resources["gameMedia/player.png"].texture);
+        super(PIXI.Texture.from(["gameMedia/player.png"]));
         this.anchor.set(.5, .5);
         this.scale.set(1);
         this.x = 400;
@@ -93,7 +93,7 @@ class ExtraLifePowerup extends PIXI.Sprite {
     powerupSound;
 
     constructor(gridX, gridY, gameScene, powerupSound) {
-        super(app.loader.resources["gameMedia/extraLife.png"].texture);
+        super(PIXI.Texture.from(["gameMedia/extraLife.png"]));
         this.gridLocationX = gridX;
         this.gridLocationY = gridY;
         this.x = 108 + (45 * gridX);
@@ -126,7 +126,7 @@ class ExtraScorePowerup extends PIXI.Sprite {
     powerupSound;
 
     constructor(gridX, gridY, gameScene, powerupSound) {
-        super(app.loader.resources["gameMedia/extraScore.png"].texture);
+        super(PIXI.Texture.from(["gameMedia/extraScore.png"]));
         this.gridLocationX = gridX;
         this.gridLocationY = gridY;
         this.x = 108 + (45 * gridX);
@@ -158,9 +158,9 @@ class Tile extends PIXI.Sprite {
         super();
 
         //Creating the array of sprites to be used later----
-        let safeTexture = app.loader.resources["gameMedia/tileSafe.png"].texture;
-        let hazardTexture = app.loader.resources["gameMedia/tileHazard.png"].texture;
-        let dangerTexture = app.loader.resources["gameMedia/tileDanger.png"].texture;
+        let safeTexture = PIXI.Texture.from(["gameMedia/tileSafe.png"]);
+        let hazardTexture = PIXI.Texture.from(["gameMedia/tileHazard.png"]);
+        let dangerTexture = PIXI.Texture.from(["gameMedia/tileDanger.png"]);
         this.tileTextures = [safeTexture, hazardTexture, dangerTexture]
 
         //Setting the sprite (safe is default)----

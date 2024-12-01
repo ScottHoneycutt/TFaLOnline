@@ -37,9 +37,9 @@ redisClient.connect().then(() => {
   const app = express();
 
   // Setting up dependencies -SJH
-  app.use(helmet());
+  app.use( helmet({ contentSecurityPolicy: false }) );
   app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
-  app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
+  app.use(favicon(`${__dirname}/../hosted/img/player.png`));
   app.use(compression());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());

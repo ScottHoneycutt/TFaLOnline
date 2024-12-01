@@ -93,7 +93,7 @@ const App = () => {
 
 const init = () => {
   const root = createRoot(document.getElementById('app')); 
-  root.render(<App />);
+  root.render(<App/>);
 };
 
 window.onload = init;
