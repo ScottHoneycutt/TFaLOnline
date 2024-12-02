@@ -6,12 +6,24 @@ const { Player, ExtraLifePowerup, ExtraScorePowerup, Grid } = require('./gameCla
 const PIXI = require('pixi.js');
 require("pixi.js/unsafe-eval");
 const { Howl } = require('howler');
-//Requiring media files -SJH
-require
 
+//Requiring media files -SJH
+const extraLifePng = require("../hosted/img/extraLife.png");
+const extraScorePng = require("../hosted/img/extraScore.png");
+const playerPng = require("../hosted/img/player.png");
+const tileDangerPng = require("../hosted/img/tileDanger.png");
+const tileHazardPng = require("../hosted/img/tileHazard.png");
+const tileSafePng = require("../hosted/img/tileSafe.png");
+const buttonClickWav = require("../hosted/sound/buttonClick.wav");
+const lifeLostWav = require("../hosted/sound/lifeLost.wav");
+const moveMp3 = require("../hosted/sound/move.mp3");
+const powerupWav = require("../hosted/sound/powerup.wav");
+const tickWav = require("../hosted/sound/tick.wav");
 
 //PixiJS app -SJH
 let app;
+//Textures object -SJH
+let textures;
 //Window dimensions -SJH
 let sceneWidth;
 let sceneHeight;
@@ -274,7 +286,8 @@ const gameLoop = () => {
                             Math.floor(Math.random() * 13),
                             Math.floor(Math.random() * 13),
                             gameScene,
-                            powerupSound);
+                            powerupSound,
+                            textures);
                     }
                     else {
                         //Extra score at a random tile location----
@@ -282,7 +295,8 @@ const gameLoop = () => {
                             Math.floor(Math.random() * 13),
                             Math.floor(Math.random() * 13),
                             gameScene,
-                            powerupSound);
+                            powerupSound,
+                            textures);
                     }
                     //Collecting the powerup if it just happened to spawn on top of the player-----
                     currentPowerup.checkIfCollected();
@@ -308,7 +322,7 @@ const populateSceneUIs = () => {
 
     //START SCENE STUFF-------------------------------------------------
     //Creating the title text----
-    let title = new PIXI.Text("The Floor is (almost) Lava!");
+    let title = new PIXI.Text({text: "The Floor is (almost) Lava!"});
     title.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 50,
@@ -322,7 +336,8 @@ const populateSceneUIs = () => {
     menuScene.addChild(title);
 
     //Creating instructions for the game----
-    let startLabel2 = new PIXI.Text("Instructions: \n     Move using WASD or the arrow keys. \n     Avoid the lava.");
+    let startLabel2 = new PIXI.Text(
+        {text:"Instructions: \n     Move using WASD or the arrow keys. \n     Avoid the lava."});
     startLabel2.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 26,
@@ -334,7 +349,7 @@ const populateSceneUIs = () => {
     menuScene.addChild(startLabel2);
 
     //Creating and adding the start game button----
-    let startButton = new PIXI.Text("Play!");
+    let startButton = new PIXI.Text({text:"Play!"});
     //Set button style----
     startButton.style = buttonStyle;
     //Button position----
@@ -370,7 +385,7 @@ const populateSceneUIs = () => {
     scoreDisplay.text = `Score: ${score}`;
 
     //Adding the score icon----
-    let scoreSymbol = PIXI.Sprite.from(["/assets/img/extraScore.png"]);
+    let scoreSymbol = PIXI.Sprite.from(textures.extraScorePng);
     scoreSymbol.x = 305;
     scoreSymbol.y = 5;
     gameScene.addChild(scoreSymbol);
@@ -384,13 +399,13 @@ const populateSceneUIs = () => {
     livesDisplay.text = `Lives Remaining: ${livesRemaining}`;
 
     //Adding the lives icon----
-    let lifeSymbol = PIXI.Sprite.from(["/assets/img/extraLife.png"]);
+    let lifeSymbol = PIXI.Sprite.from(textures.extraLifePng);
     lifeSymbol.x = 5;
     lifeSymbol.y = 5;
     gameScene.addChild(lifeSymbol);
 
     //GAME OVER SCENE STUFF----------------------------------------------
-    let gameOverText = new PIXI.Text("Game Over!");
+    let gameOverText = new PIXI.Text({text:"Game Over!"});
     //Creating a text style----
     let TextStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
@@ -405,14 +420,14 @@ const populateSceneUIs = () => {
     gameOverScene.addChild(gameOverText);
 
     //Make the score display----
-    gameOverScoreLabel = new PIXI.Text("Score: 0");
+    gameOverScoreLabel = new PIXI.Text({text:"Score: 0"});
     gameOverScoreLabel.style = TextStyle;
     gameOverScoreLabel.x = 300;
     gameOverScoreLabel.y = sceneHeight / 2;
     gameOverScene.addChild(gameOverScoreLabel) + 100;
 
     //Return to main menu button----
-    let mainMenuButton = new PIXI.Text("Main Menu");
+    let mainMenuButton = new PIXI.Text({text:"Main Menu"});
     mainMenuButton.style = buttonStyle;
     mainMenuButton.x = 280;
     mainMenuButton.y = sceneHeight - 100;
@@ -428,19 +443,19 @@ const populateSceneUIs = () => {
 const setup = () => {
     //Loading sound effects----
     moveSound = new Howl({
-        src: ['gameMedia/move.mp3']
+        src: [moveMp3]
     });
     dieSound = new Howl({
-        src: ['gameMedia/lifeLost.wav']
+        src: [lifeLostWav]
     });
     tickSound = new Howl({
-        src: ['gameMedia/tick.wav']
+        src: [tickWav]
     });
     powerupSound = new Howl({
-        src: ['gameMedia/powerup.wav']
+        src: [powerupWav]
     });
     buttonSound = new Howl({
-        src: ['gameMedia/buttonClick.wav']
+        src: [buttonClickWav]
     });
 
     //Creating the main menu scene----
@@ -458,8 +473,8 @@ const setup = () => {
     app.stage.addChild(gameOverScene);
 
     //Create the player and the grid----
-    grid = new Grid(gameScene);
-    player = new Player(grid, moveSound);
+    grid = new Grid(gameScene, textures);
+    player = new Player(grid, moveSound, textures);
     gameScene.addChild(player);
 
     //Populating each scene's UI----
@@ -488,11 +503,9 @@ const Game = () => {
 
 //Create the game canvas and put it on the HTML page -SJH
 const init = async () => {
-    console.log("start of init (not app.init)");
     //Creating the pixijs app----
     app = new PIXI.Application();
     await app.init({ width: 800, height: 800 });
-    console.log("app.init done");
 
     //Caching window dimensions -SJH
     sceneWidth = app.canvas.width;
@@ -500,23 +513,36 @@ const init = async () => {
 
     console.log("loading assets");
     //Loading in images----
-    await PIXI.Assets.load([
-        "/assets/img/extraLife.png",
-        "/assets/img/extraScore.png",
-        "/assets/img//player.png",
-        "/assets/img/tileSafe.png",
-        "/assets/img/tileHazard.png",
-        "/assets/img/tileDanger.png",
-    ]);
+    PIXI.Assets.add({ alias: 'extraLifePng', src: extraLifePng });
+    PIXI.Assets.add({ alias: 'extraScorePng', src: extraScorePng });
+    PIXI.Assets.add({ alias: 'playerPng', src: playerPng });
+    PIXI.Assets.add({ alias: 'tileSafePng', src: tileSafePng });
+    PIXI.Assets.add({ alias: 'tileHazardPng', src: tileHazardPng });
+    PIXI.Assets.add({ alias: 'tileDangerPng', src: tileDangerPng });
 
-    console.log("running setup");
-    setup();
-    console.log("end of setup");
+    const texturesPromise = PIXI.Assets.load([
+        'extraLifePng',
+        'extraScorePng',
+        'playerPng',
+        'tileSafePng',
+        'tileHazardPng',
+        'tileDangerPng',]);
 
-    const gameArea = createRoot(document.querySelector('#gameArea'));
-    gameArea.render(<Game />)
-    //document.querySelector("#game").appendChild(app.canvas);
-    console.log("end of init");
+    texturesPromise.then((texturesLoaded) => {
+        textures = texturesLoaded;
+        //const gameArea = createRoot(document.querySelector('#gameArea'));
+        const gameArea = document.querySelector('#gameArea');
+        //gameArea.innerHTML = `<img src = ${tileSafePng}>`
+
+        console.log("running setup");
+        setup();
+        console.log("end of setup");
+
+
+        //gameArea.render(<Game />)
+        gameArea.appendChild(app.canvas);
+        console.log("end of init");
+    });
 };
 
 window.onload = init;

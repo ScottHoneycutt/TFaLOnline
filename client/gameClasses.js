@@ -7,9 +7,9 @@ class Player extends PIXI.Sprite {
     grid;
     moveSound;
 
-    constructor(grid, moveSound) {
+    constructor(grid, moveSound, textures) {
         //The sprite and its position on screen----
-        super(PIXI.Texture.from(["gameMedia/player.png"]));
+        super(textures.playerPng);
         this.anchor.set(.5, .5);
         this.scale.set(1);
         this.x = 400;
@@ -92,8 +92,9 @@ class ExtraLifePowerup extends PIXI.Sprite {
     gameScene;
     powerupSound;
 
-    constructor(gridX, gridY, gameScene, powerupSound) {
-        super(PIXI.Texture.from(["gameMedia/extraLife.png"]));
+    constructor(gridX, gridY, gameScene, powerupSound, textures) {
+        super(textures.extraLifePng);
+
         this.gridLocationX = gridX;
         this.gridLocationY = gridY;
         this.x = 108 + (45 * gridX);
@@ -125,8 +126,9 @@ class ExtraScorePowerup extends PIXI.Sprite {
     gameScene;
     powerupSound;
 
-    constructor(gridX, gridY, gameScene, powerupSound) {
-        super(PIXI.Texture.from(["gameMedia/extraScore.png"]));
+    constructor(gridX, gridY, gameScene, powerupSound, textures) {
+        super(textures.extraLifePng);
+
         this.gridLocationX = gridX;
         this.gridLocationY = gridY;
         this.x = 108 + (45 * gridX);
@@ -154,13 +156,12 @@ class ExtraScorePowerup extends PIXI.Sprite {
 class Tile extends PIXI.Sprite {
     tileTextures;
 
-    constructor(x = 0, y = 0) {
+    constructor(textures, x = 0, y = 0) {
         super();
-
         //Creating the array of sprites to be used later----
-        let safeTexture = PIXI.Texture.from(["gameMedia/tileSafe.png"]);
-        let hazardTexture = PIXI.Texture.from(["gameMedia/tileHazard.png"]);
-        let dangerTexture = PIXI.Texture.from(["gameMedia/tileDanger.png"]);
+        let safeTexture = textures.tileSafePng;
+        let hazardTexture = textures.tileHazardPng;
+        let dangerTexture = textures.tileDangerPng;
         this.tileTextures = [safeTexture, hazardTexture, dangerTexture]
 
         //Setting the sprite (safe is default)----
@@ -183,8 +184,11 @@ class Grid {
     tileArray;
     statusArray;
     tickArray;
+    textures;
 
-    constructor(gameScene) {
+    constructor(gameScene, textures) {
+        this.textures = textures;
+
         //Creating a grid showing all the tiles (will be a 13x13 grid)----
         this.tileArray = [];
 
@@ -193,7 +197,10 @@ class Grid {
             //Creating a 1D array to add to the main array----
             let tileArrayPart = [];
             for (let x = 0; x < 13; x++) {
-                let tileToAdd = new Tile(108 + (45 * x), 108 + (45 * y))
+                let tileToAdd = new Tile(
+                    textures,
+                    108 + (45 * x), 
+                    108 + (45 * y))
                 tileArrayPart.push(tileToAdd);
                 //Adding the child to the gameScene----
                 gameScene.addChild(tileToAdd);

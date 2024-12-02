@@ -16,7 +16,16 @@ module.exports = {
                     loader:"babel-loader",
                 },
                 
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif|mp3|wav)$/i,
+                exclude: /node_modules/,
+                type: 'asset/resource',
+                // generator: {
+                //     // keep original filenames and copy images to `dist/img/`
+                //     filename: 'assets/[name][ext]', 
+                // },
+            },
         ]
     },
 
