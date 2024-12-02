@@ -278,7 +278,7 @@ const gameLoop = () => {
             grid.tickGrid();
 
             //Add a new powerup every 7 cycles (if there isn't already one present)----
-            if (tickCycles % 2 == 0) {
+            if (tickCycles % 7 == 0) {
                 if (!powerupActive) {
                     powerupActive = true;
 

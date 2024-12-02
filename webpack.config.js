@@ -18,13 +18,9 @@ module.exports = {
                 
             },
             {
-                test: /\.(png|svg|jpg|jpeg|gif|mp3|wav)$/i,
+                test: /\.(png|mp3|wav)$/i,
                 exclude: /node_modules/,
                 type: 'asset/resource',
-                // generator: {
-                //     // keep original filenames and copy images to `dist/img/`
-                //     filename: 'assets/[name][ext]', 
-                // },
             },
         ]
     },
