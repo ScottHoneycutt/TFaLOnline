@@ -19,8 +19,10 @@ const router = (app) => {
 
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
-  app.get('/game', mid.requiresLogin, controllers.Domo.makerPage);
-  app.post('/game', mid.requiresLogin, controllers.Domo.makeDomo);
+  app.get('/account', mid.requiresLogin, controllers.Account.accountPage);
+
+  app.get('/game', mid.requiresSecure, controllers.Domo.makerPage);
+  app.post('/game', mid.requiresSecure, controllers.Domo.makeDomo);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   module.exports = router;

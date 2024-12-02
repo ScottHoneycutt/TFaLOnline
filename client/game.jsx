@@ -87,21 +87,25 @@ const callMoveMethods = (keyCode) => {
         }
 
         //Check to see if the player is on solid ground or not (lose a life if not) -SJH
-        if (player.checkCurrentTile()) {
+        if (!player.checkCurrentTile()) {
             reduceLivesBy(1);
         }
         //Check to see if the player is collecting a powerup -SJH
-        if (powerupActive) {
+        if (powerupActive === true) {
             if (currentPowerup.checkIfCollected(player.gridLocationX, player.gridLocationY)) {
                 //Add life or increase score depending upon the powerup type -SJH
-                if (typeof currentPowerup === ExtraLifePowerup) {
+                if (currentPowerup.getPowerupType() === "life") {
                     addLife();
+                    console.log("adding life");
                 }
-                else if (typeof currentPowerup === ExtraScorePowerup) {
+                else if (currentPowerup.getPowerupType() === "score") {
                     increaseScoreBy(5);
+                    console.log("increasing score");
                 }
+                gameScene.removeChild(currentPowerup);
                 powerupActive = false;
                 currentPowerup = null;
+                console.log("removing powerup");
             }
         }
     }
@@ -274,7 +278,7 @@ const gameLoop = () => {
             grid.tickGrid();
 
             //Add a new powerup every 7 cycles (if there isn't already one present)----
-            if (tickCycles % 7 == 0) {
+            if (tickCycles % 2 == 0) {
                 if (!powerupActive) {
                     powerupActive = true;
 
@@ -327,8 +331,7 @@ const populateSceneUIs = () => {
         fill: 0xFFFFFF,
         fontSize: 50,
         fontFamily: "Verdana, Geneva, sans-serif",
-        stroke: 0xF28305,
-        strokeThickness: 4
+        stroke: {color: 0xF28305, width: 4},
     });
     title.x = 65;
     title.y = 120;
@@ -411,8 +414,7 @@ const populateSceneUIs = () => {
         fill: 0xFFFFFF,
         fontSize: 50,
         fontFamily: "Verdana, Geneva, sans-serif",
-        stroke: 0xF28305,
-        strokeThickness: 4
+        stroke: {color: 0xF28305, width: 4}
     });
     gameOverText.style = TextStyle;
     gameOverText.x = 270;
@@ -533,15 +535,9 @@ const init = async () => {
         //const gameArea = createRoot(document.querySelector('#gameArea'));
         const gameArea = document.querySelector('#gameArea');
         //gameArea.innerHTML = `<img src = ${tileSafePng}>`
-
-        console.log("running setup");
         setup();
-        console.log("end of setup");
-
-
         //gameArea.render(<Game />)
         gameArea.appendChild(app.canvas);
-        console.log("end of init");
     });
 };
 

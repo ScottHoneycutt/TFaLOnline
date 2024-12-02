@@ -105,12 +105,15 @@ class ExtraLifePowerup extends PIXI.Sprite {
         this.gameScene.addChild(this);
     }
 
+    //Simple check to get the type of powerup this is -SJH
+    getPowerupType(){
+        return "life"
+    }
+
     //Checks if this powerup is at the passed in location. Increases player lives if this powerup's coordinates
     //match the coordinates passed in----
     checkIfCollected(gridX, gridY) {
         if (this.gridLocationX == gridX && this.gridLocationY == gridY) {
-            //Removing the powerup after it has been collected----
-            this.gameScene.removeChild(this);
             //Play powerup sound----
             this.powerupSound.play();
             return true;
@@ -127,7 +130,7 @@ class ExtraScorePowerup extends PIXI.Sprite {
     powerupSound;
 
     constructor(gridX, gridY, gameScene, powerupSound, textures) {
-        super(textures.extraLifePng);
+        super(textures.extraScorePng);
 
         this.gridLocationX = gridX;
         this.gridLocationY = gridY;
@@ -139,16 +142,20 @@ class ExtraScorePowerup extends PIXI.Sprite {
         this.gameScene.addChild(this);
     }
 
+    //Simple check to get the type of powerup this is -SJH
+    getPowerupType(){
+        return "score"
+    }
+
     //Checks if this powerup is at the passed in location. Increases player score 
     //if this powerup's coordinates match the coordinates passed in----
     checkIfCollected(gridX, gridY) {
         if (this.gridLocationX == gridX && this.gridLocationY == gridY) {
-            //Removing the powerup after it has been collected----
-            this.gameScene.removeChild(this);
-
             //Play powerup sound----
             this.powerupSound.play();
+            return true;
         }
+        return false;
     }
 }
 
@@ -288,7 +295,7 @@ class Grid {
 
     //Detects if a certain tile on the grid is safe to stand on. Used to check if the player is in a safe spot----
     checkIfSafe(x, y) {
-        if (this.statusArray[y][x] == 2) {
+        if (this.statusArray[y][x] === 2) {
             return false;
         }
         return true;
