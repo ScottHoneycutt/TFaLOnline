@@ -22,7 +22,8 @@ const handleLogin = (e) => {
 
 //Event handler for when the form in the signup template submits. -SJH
 const handleSignup = (e) => {
-    e.preventDefault(); helper.hideError();
+    e.preventDefault(); 
+    helper.hideError();
 
     const username = e.target.querySelector('#user').value;
     const pass = e.target.querySelector('#pass').value;

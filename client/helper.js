@@ -39,8 +39,20 @@ const hideError = () =>{
     document.getElementById("domoMessage").classList.add('hidden');
 }
 
+//Helper method. Hides the specified HTML element -SJH
+const hideElement = (elementToHide) =>{
+    elementToHide.classList.add('hidden');
+}
+
+//Helper method. Reveals the specified HTML element -SJH
+const revealElement = (elementToReveal) =>{
+    elementToReveal.classList.remove('hidden');
+}
+
 module.exports = {
     handleError,
     sendPost,
     hideError,
+    hideElement,
+    revealElement,
 }

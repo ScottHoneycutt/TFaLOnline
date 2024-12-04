@@ -16,6 +16,7 @@ const router = (app) => {
 
   app.get('/scoreboard', mid.requiresSecure, controllers.Highscore.scoresPage);
   app.post('/scoreboard', mid.requiresSecure, controllers.Highscore.addNewScore);
+  app.get('/isLoggedIn', mid.requiresSecure, controllers.Account.isLoggedIn);
 
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 

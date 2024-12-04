@@ -112,6 +112,14 @@ const signup = async (req, res) => {
   }
 };
 
+//Simple request handler to tell the client if they are logged in or not -SJH
+const isLoggedIn = (req, res) =>{
+  if (req.session){
+    return res.status(200).json({loggedIn: true});
+  }
+  return res.status(200).json({loggedIn: false});
+}
+
 module.exports = {
   loginPage,
   accountPage,
@@ -119,4 +127,5 @@ module.exports = {
   logout,
   signup,
   changePassword,
+  isLoggedIn,
 };

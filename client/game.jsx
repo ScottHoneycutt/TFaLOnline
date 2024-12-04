@@ -20,6 +20,63 @@ const moveMp3 = require("../hosted/sound/move.mp3");
 const powerupWav = require("../hosted/sound/powerup.wav");
 const tickWav = require("../hosted/sound/tick.wav");
 
+//=================================================================================================
+//CODE FOR TALKING BACK AND FORTH WITH THE SERVER FOR SCORE STUFF -SJH -----------------
+//=================================================================================================
+
+//Helper method. Sends a get request to the server to see if the client is logged in or not -SJH
+const isLoggedInGet = async() => {
+    const response = await fetch(url, {
+        method: 'GET',
+    });
+    const jsonData = await response.json();
+    return jsonData.isLoggedIn;
+}
+
+//Helper method. Shows an HTML element to prompt the user for their username
+//since they are not logged in -SJH
+const showUsernamePrompt = () =>{
+    const scoreForm = document.querySelector("#manualScoreSubmit");
+    helper.revealElement(scoreForm);
+}
+
+//Method is called when a user tries to submit a new score to the scoreboard -SJH
+const handleScore = async (newScore) => {
+    const isLoggedIn = await isLoggedInGet();
+
+    if (isLoggedIn){
+        helper.sendPost('/scoreboard', { score: newScore });
+    }
+    else {
+        //Check to see if the score is high enough to make it onto the leaderboard. 
+        //If so, prompt for a manual submit. -SJH
+        const response = await fetch('/getAllScores');
+        const data = await response.json();
+        console.log(data);
+        // if (){
+
+        // }
+
+        //showUsernamePrompt(newScore);
+    }
+}
+
+//When the user hits the submit button on the manual score submit, hide the manual 
+//submit menu and send the post request to submit a new score. -SJH
+const submitScoreManually = (e) => {
+    const scoreForm = e.querySelector("#manualScoreSubmit");
+    helper.hideElement(scoreForm);
+
+    const username = e.querySelector("#user").value;
+    helper.sendPost('/scoreboard', { score: finalScore, username: username });
+}
+
+
+
+//=================================================================================================
+//PIXIJS GAME STUFF -SJH -----------------
+//=================================================================================================
+
 //PixiJS app -SJH
 let app;
 //Textures object -SJH
@@ -34,6 +91,7 @@ let gameOverScene;
 //Important game variables----
 let livesRemaining = 3;
 let score = 0;
+let finalScore = 0;
 let player;
 let grid;
 let ticks = 0;
@@ -202,6 +260,10 @@ const end = () => {
 
     //Update score display at the end of the game----
     gameOverScoreLabel.text = "Score: " + score
+
+    //Begin process of sending score to the server -SJH
+    finalScore = score;
+    handleScore(finalScore);
 }
 
 //This is called repeatedly when the game has actually begun----
@@ -492,11 +554,23 @@ const setup = () => {
 //=================================================================================================
 //REACT ELEMENTS -SJH -----------------
 //=================================================================================================
-const Game = () => {
-    const [reloadScores, setReloadScores] = useState(false);
+
+//React template element for the signup screen. -SJH
+const ScoreSubmitForm = (props) => {
     return (
-        <div id="game">
-        </div>);
+        <form id="manualScoreSubmit" 
+            class="hidden"
+            name="signupForm"
+            onSubmit={submitScoreManually}
+            action="/scoreboard" method="POST"
+            className="mainForm">
+            <h3>It looks like you aren't logged in...</h3>
+            <p>Would you like to submit your score to the scoreboad under an alias?</p>
+            <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="Scoreboard display name"/>
+            <input className="formSubmit" type="submit" value="Submit Score"/>
+        </form>
+    );
 };
 
 //=================================================================================================
@@ -505,6 +579,8 @@ const Game = () => {
 
 //Create the game canvas and put it on the HTML page -SJH
 const init = async () => {
+    //Creating the 
+
     //Creating the pixijs app----
     app = new PIXI.Application();
     await app.init({ width: 800, height: 800 });

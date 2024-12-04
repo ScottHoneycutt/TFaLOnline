@@ -26,8 +26,7 @@ const ScoreForm = (props) => {
             onSubmit={(e) => handleScore(e, props.triggerReload)}
             name="scoreForm"
             action="/scoreboard" method="POST"
-            className="scoreForm"
-        >
+            className="scoreForm">
             <label htmlFor="name">Username (overridden by account username if logged in): </label>
             <input id="username" type="text" name="name" placeholder="Username" />
             <label htmlFor="score">Score: </label>
@@ -45,15 +44,12 @@ const ScoreList = (props) => {
         const loadScoresFromServer = async () => {
             const response = await fetch('/getAllScores');
             const data = await response.json();
-            console.log(data);
             setScores(data.highscores);
         };
 
         loadScoresFromServer();
-        console.log("loadScoresFromServer done");
     }, [props.reloadScores]);
 
-    console.log(scores);
 
     if (scores.length === 0) {
         return (
@@ -61,7 +57,6 @@ const ScoreList = (props) => {
                 <h3 className="emptyScore">No scores Yet!</h3>
             </div>);
     }
-    console.log("checked length of scores object done (surpassed no scores case)");
 
     const scoreNodes = scores.map(score => {
         return (
@@ -70,7 +65,6 @@ const ScoreList = (props) => {
                 <h3 className="score">Score: {score.score}</h3>
             </div>);
     });
-    console.log("Finished creating an array of score nodes");
     return (
         <div className="scoreList">
             {scoreNodes}

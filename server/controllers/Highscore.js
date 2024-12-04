@@ -65,11 +65,11 @@ const getMyHighscores = async (req, res) => {
   }
 };
 
-// Returns all highscores -SJH
+// Returns the top 20 scores (all players) -SJH
 const getAllHighScores = async (req, res) => {
   try {
     // No search query because we want all highscore objects -SJH
-    const docs = await Highscore.find({}).sort({ score: -1 }).select('username score').lean()
+    const docs = await Highscore.find({}).sort({ score: -1 }).limit(20).select('username score').lean()
       .exec();
     return res.json({ highscores: docs });
   } catch (err) {
