@@ -8,9 +8,11 @@
 </head>
 
 <body>
-  <nav><a href="/login"><img id="logo" src="/assets/img/player.png" alt="The Floor is (almost) Lava logo" /></a>
-    <div class="navlink"><a href="/logout">Log out</a></div>
+  <nav>
+    <a href="/game"><img id="logo" src="/assets/img/player.png" alt="The Floor is (almost) Lava logo" /></a>
+    <div class="navlink"><a href="/game">Play</a></div>
     <div class="navlink"><a href="/scoreboard">Leaderboard</a></div>
+    <div class="navlink"><a href="/login">Account</a></div>
   </nav>
 
   <div id="titleBar"></div>
@@ -19,10 +21,8 @@
     </div>
   </div>
 
-  <div id="manualScoreSubmit" class='hidden'>
-    {{!-- <img id="speech" src="/assets/img/player.png" alt="speech box" />
-    <h3><span id="errorMessage"></span></h3>
-    <img id="domo" src="assets/img/player.png" alt="domo" /> --}}
+  <div id="scoreSubmitContainer">
+
   </div>
   <script src="/assets/gameBundle.js"></script>
 </body>

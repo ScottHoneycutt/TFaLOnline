@@ -6,19 +6,18 @@
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body>
-  <nav><a href="/login"><img id="logo" src="/assets/img/player.png" alt="face logo"/></a>
-    <div class="navlink"></div>
+  <nav>
+    <a href="/game"><img id="logo" src="/assets/img/player.png" alt="TFaL logo"/></a>
+    <div class="navlink"><a href="/game">Play</a></div>
+    <div class="navlink"><a href="/scoreboard">Leaderboard</a></div>
+    <div class="navlink"><a href="/login">Account</a></div>
+    <div class="navlink"><a href="/logout">Log Out</a></div>
+    <div class="navlink"><a href="/changePassword">Change Password</a></div>
   </nav>
 
-  <section id="app">
+  <section id="content">
 
   </section>
-
-  <div id="domoMessage" class='hidden'>
-    <img id="speech" src="/assets/img/speplayerech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3>
-    <img id="domo" src="assets/img/player.png" alt="domo"/>
-  </div>
-  <script src="/assets/scoreboardBundle.js"></script>
+  <script src="/assets/accountBundle.js"></script>
 </body>
 </html>

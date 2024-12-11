@@ -6,7 +6,8 @@
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body> 
-  <nav><a href="/login"><img id="logo" src="/assets/img/player.png" alt="face logo"/></a>
+  <nav>
+    <a href="/game"><img id="logo" src="/assets/img/player.png" alt="TFaL logo"/></a>
     <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
     <div class="navlink"><a id="signupButton" href="/signup">Sign up</a></div>
   </nav>
@@ -15,10 +16,8 @@
 
   </section>
 
-  <div id="domoMessage" class='hidden'>
-    <img id="speech" src="/assets/img/player.png" alt="speech box"/>
+  <div id="errorMessageContainer" class='hidden'>
     <h3><span id="errorMessage"></span></h3>
-    <img id="domo" src="assets/img/player.png" alt="domo"/>
   </div>
   <script src="/assets/loginBundle.js"></script>
 </body>

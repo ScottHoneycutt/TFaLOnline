@@ -5,9 +5,12 @@ const mid = require('./middleware');
 
 // function to attach routes
 const router = (app) => {
-  app.get('/getDomos', mid.requiresLogin, controllers.Domo.getDomos);
-
   app.get('/getAllScores', mid.requiresSecure, controllers.Highscore.getAllHighScores);
+  app.get('/getProfileData', mid.requiresLogin, controllers.Account.getProfileData);
+  app.post('/modifyProfile', mid.requiresLogin, controllers.Account.modifyProfile);
+  app.get('/getMyHighscores', mid.requiresLogin, controllers.Highscore.getMyHighscores);
+  app.post('/incrementGamesPlayed', mid.requiresLogin, controllers.Account.incrementGamesPlayed);
+  app.post('/userColor', mid.requiresSecure, controllers.Highscore.getUserColor);
 
   app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
@@ -19,11 +22,12 @@ const router = (app) => {
   app.get('/isLoggedIn', mid.requiresSecure, controllers.Account.isLoggedIn);
 
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
+  app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);
+  app.get('/changePassword', mid.requiresLogin, controllers.Account.changePasswordPage);
 
   app.get('/account', mid.requiresLogin, controllers.Account.accountPage);
 
-  app.get('/game', mid.requiresSecure, controllers.Domo.makerPage);
-  app.post('/game', mid.requiresSecure, controllers.Domo.makeDomo);
+  app.get('/game', mid.requiresSecure, controllers.Game.gamePage);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   module.exports = router;

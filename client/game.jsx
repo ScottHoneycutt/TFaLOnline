@@ -26,26 +26,37 @@ const tickWav = require("../hosted/sound/tick.wav");
 
 //Helper method. Sends a get request to the server to see if the client is logged in or not -SJH
 const isLoggedInGet = async() => {
-    const response = await fetch(url, {
+    const response = await fetch("isLoggedIn", {
         method: 'GET',
     });
     const jsonData = await response.json();
-    return jsonData.isLoggedIn;
+    console.log(jsonData);
+    return jsonData.loggedIn;
 }
 
 //Helper method. Shows an HTML element to prompt the user for their username
 //since they are not logged in -SJH
-const showUsernamePrompt = () =>{
+const showUsernamePrompt = () => {
     const scoreForm = document.querySelector("#manualScoreSubmit");
     helper.revealElement(scoreForm);
+}
+
+//Helper method. Hides the HTML element that prompts users for their username 
+//when not logged in. -SJH
+const hideUsernamePrompt = () => {
+    const scoreForm = document.querySelector("#manualScoreSubmit");
+    helper.hideElement(scoreForm);
 }
 
 //Method is called when a user tries to submit a new score to the scoreboard -SJH
 const handleScore = async (newScore) => {
     const isLoggedIn = await isLoggedInGet();
 
-    if (isLoggedIn){
+    if (isLoggedIn) {
+        console.log("sending post to scoreboard");
         helper.sendPost('/scoreboard', { score: newScore });
+        console.log("updating number of games played");
+        fetch("/incrementGamesPlayed", {method: 'POST'});
     }
     else {
         //Check to see if the score is high enough to make it onto the leaderboard. 
@@ -53,24 +64,29 @@ const handleScore = async (newScore) => {
         const response = await fetch('/getAllScores');
         const data = await response.json();
         console.log(data);
-        // if (){
-
-        // }
-
-        //showUsernamePrompt(newScore);
+        //Data is already in descending order. Only need to check the 10th element 
+        //(index 9) to see if this score belongs on the leaderboard. -SJH
+        //First, check to see if there's that much data in the scoreboard -SJH
+        if (data.highscores.length >= 10){
+            if (data.highscores[9].score < newScore) {
+                showUsernamePrompt();
+            }
+        }
+        else{
+            showUsernamePrompt();
+        }
     }
 }
 
 //When the user hits the submit button on the manual score submit, hide the manual 
 //submit menu and send the post request to submit a new score. -SJH
 const submitScoreManually = (e) => {
-    const scoreForm = e.querySelector("#manualScoreSubmit");
-    helper.hideElement(scoreForm);
-
-    const username = e.querySelector("#user").value;
+    e.preventDefault(); 
+    const username = e.target.querySelector("#user").value;
     helper.sendPost('/scoreboard', { score: finalScore, username: username });
+    helper.hideElement(e.target);
+    return false;
 }
-
 
 
 //=================================================================================================
@@ -154,16 +170,13 @@ const callMoveMethods = (keyCode) => {
                 //Add life or increase score depending upon the powerup type -SJH
                 if (currentPowerup.getPowerupType() === "life") {
                     addLife();
-                    console.log("adding life");
                 }
                 else if (currentPowerup.getPowerupType() === "score") {
                     increaseScoreBy(5);
-                    console.log("increasing score");
                 }
                 gameScene.removeChild(currentPowerup);
                 powerupActive = false;
                 currentPowerup = null;
-                console.log("removing powerup");
             }
         }
     }
@@ -181,6 +194,9 @@ const returnToMenu = () => {
 
 //Takes the game from the main menu to the game scene and starts the game----
 const startGame = () => {
+    //Hide the manual score submission menu if it's still shown -SJH
+    hideUsernamePrompt();
+
     //Play the button click sound----
     buttonSound.play();
 
@@ -558,16 +574,15 @@ const setup = () => {
 //React template element for the signup screen. -SJH
 const ScoreSubmitForm = (props) => {
     return (
-        <form id="manualScoreSubmit" 
-            class="hidden"
+        <form id="manualScoreSubmit"
             name="signupForm"
             onSubmit={submitScoreManually}
             action="/scoreboard" method="POST"
-            className="mainForm">
-            <h3>It looks like you aren't logged in...</h3>
-            <p>Would you like to submit your score to the scoreboad under an alias?</p>
+            className="hidden">
+            <h3>Your score is among the top 10!</h3>
+            <p>It looks like you're not logged in. Would you like to submit your score to the scoreboad under an alias?</p>
             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="Scoreboard display name"/>
+            <input id="user" type="text" name="username" placeholder="Enter Alias"/>
             <input className="formSubmit" type="submit" value="Submit Score"/>
         </form>
     );
@@ -579,7 +594,9 @@ const ScoreSubmitForm = (props) => {
 
 //Create the game canvas and put it on the HTML page -SJH
 const init = async () => {
-    //Creating the 
+    //Creating the manual submit form -SJH
+    const scoreSubmitContainer = createRoot(document.getElementById('scoreSubmitContainer'));
+    scoreSubmitContainer.render(<ScoreSubmitForm/>);
 
     //Creating the pixijs app----
     app = new PIXI.Application();

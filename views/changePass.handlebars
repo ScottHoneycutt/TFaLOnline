@@ -8,23 +8,21 @@
 <body>
   <nav>
     <a href="/game"><img id="logo" src="/assets/img/player.png" alt="TFaL logo"/></a>
-    <div class="navlink"><a href="/login">Login</a></div>
-    <div class="navlink"><a href="/signup">Sign up</a></div>
+    <div class="navlink"><a href="/game">Play</a></div>
+    <div class="navlink"><a href="/scoreboard">Leaderboard</a></div>
+    <div class="navlink"><a href="/login">Account</a></div>
   </nav>
-  <section id="signup">
-    <form id="signupForm" name="signupForm" action="/signup" method="POST" class="mainForm">
-      <label for="username">Username: </label>
-      <input id="user" type="text" name="username" placeholder="username"/>
+  <section id="changePass">
+    <form id="changePassForm" name="changePassForm" action="/changePassword" method="POST" class="mainForm">
       <label for="pass">Password: </label>
       <input id="pass" type="password" name="pass" placeholder="password"/>
       <label for="pass2">Password: </label>
       <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
-      <input class="formSubmit" type="submit" value="Sign Up" />
+      <input class="formSubmit" type="submit" value="Confirm" />
     </form>
   </section>
   <div id="errorMessageContainer" class='hidden'>
     <h3><span id="errorMessage"></span></h3>
   </div>
-  <script src="/assets/bundle.js"></script>
 </body>
 </html>

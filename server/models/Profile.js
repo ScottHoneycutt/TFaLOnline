@@ -17,11 +17,10 @@ const ProfileSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
-  nickname: {
+  color: {
     type: String,
-    required: true,
-    trim: true,
-    set: setUserName,
+    default: '#707070',
+    required: false,
   },
   gamesPlayed: {
     type: Number,

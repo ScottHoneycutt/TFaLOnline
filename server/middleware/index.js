@@ -1,13 +1,13 @@
 const requiresLogin = (req, res, next) => {
   if (!req.session.account) {
-    return res.redirect('/');
+    return res.redirect('/login');
   }
   return next();
 };
 
 const requiresLogout = (req, res, next) => {
   if (req.session.account) {
-    return res.redirect('/game');
+    return res.redirect('/account');
   }
   return next();
 };

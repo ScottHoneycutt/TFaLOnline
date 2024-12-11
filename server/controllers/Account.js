@@ -8,6 +8,9 @@ const loginPage = (req, res) => res.render('login');
 // Sends back the account page -SJH
 const accountPage = (req, res) => res.render('account');
 
+// Sends back the change password page -SJH
+const changePasswordPage = (rez, res) => res.render('changePass');
+
 // Logs the user out of their account -SJH
 const logout = (req, res) => {
   req.session.destroy();
@@ -31,22 +34,18 @@ const login = (req, res) => {
 
     // Creating login session -SJH
     req.session.account = Account.toAPI(account);
-    return res.json({ redirect: '/game' });
+    return res.json({ redirect: '/account' });
   });
 };
 
 // Called when the user wants to change their password. -SJH
 const changePassword = async (req, res) => {
-  const { account } = req.session;
+  const { username } = req.session.account;
   const pass = `${req.body.pass}`;
   const pass2 = `${req.body.pass2}`;
 
-  // User must be logged in to change password -SJH
-  if (!account) {
-    return res.status(400).json({ error: 'Must be logged in to change password!' });
-  }
   // Two replacement passwords must be sent -SJH
-  if (!account || !pass || !pass2) {
+  if (!pass || !pass2) {
     return res.status(400).json({ error: 'All fields are required!' });
   }
   // 2 input passwords must match -SJH
@@ -54,13 +53,17 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: 'Passwords do not match!' });
   }
 
+  // Get the account back from MonogDB -SJH
+  const query = { username };
+  const doc = await Account.findOne(query).lean().exec();
   try {
+    // Apply changed password and overwrite the existing account -SJH
     const hash = await Account.generateHash(pass);
-    account.password = hash;
-    await account.save();
+    doc.password = hash;
+    await Account.replaceOne(query, doc);
     // Creating login session info -SJH
-    req.session.account = account;
-    return res.json({ redirect: '/game' });
+    req.session.account = doc;
+    return res.redirect('/account');
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'An error occured!' });
@@ -95,14 +98,13 @@ const signup = async (req, res) => {
     const newProfile = new Profile({
       username,
       premium: false,
-      nickname: username,
       gamesPlayed: 0,
       owner: req.session.account._id,
     });
     await newProfile.save();
 
     // Redirect to the default logged-in page -SJH
-    return res.json({ redirect: '/game' });
+    return res.json({ redirect: '/account' });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -112,13 +114,58 @@ const signup = async (req, res) => {
   }
 };
 
-//Simple request handler to tell the client if they are logged in or not -SJH
-const isLoggedIn = (req, res) =>{
-  if (req.session){
-    return res.status(200).json({loggedIn: true});
+// Simple request handler to tell the client if they are logged in or not -SJH
+const isLoggedIn = (req, res) => {
+  if (req.session.account) {
+    return res.status(200).json({ loggedIn: true });
   }
-  return res.status(200).json({loggedIn: false});
-}
+  return res.status(200).json({ loggedIn: false });
+};
+
+// Returns profile data so the user's browser can populate the profile part of their
+// account page -SJH
+const getProfileData = async (req, res) => {
+  if (!req.session.account) {
+    return res.status(400).json({ error: 'You must be logged in to access your profile!' });
+  }
+
+  // Get the profile data from the database -SJH
+  try {
+    const query = { owner: req.session.account._id };
+    const doc = await Profile.findOne(query)
+      .select('username gamesPlayed premium color').lean().exec();
+
+    return res.json({ profile: doc });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error retrieving profile data!' });
+  }
+};
+
+// Called when the client takes an action that modifies their profile -SJH
+const modifyProfile = async (req, res) => {
+  const query = { owner: req.session.account._id };
+  const doc = await Profile.findOne(query).lean().exec();
+
+  doc.color = req.body.color;
+  doc.premium = req.body.premium;
+
+  // Overwrite the profile on MongoDB, then send a response to the client -SJH
+  await Profile.replaceOne(query, doc);
+  return res.status(201).json({ profile: doc });
+};
+
+// Called after a logged-in user has finished playing a game -SJH
+const incrementGamesPlayed = async (req, res) => {
+  const query = { owner: req.session.account._id };
+  const doc = await Profile.findOne(query).lean().exec();
+
+  doc.gamesPlayed += 1;
+
+  // Overwrite the profile on MongoDB, then send a response to the client -SJH
+  await Profile.replaceOne(query, doc);
+  return res.status(204);
+};
 
 module.exports = {
   loginPage,
@@ -128,4 +175,8 @@ module.exports = {
   signup,
   changePassword,
   isLoggedIn,
+  getProfileData,
+  modifyProfile,
+  incrementGamesPlayed,
+  changePasswordPage,
 };
