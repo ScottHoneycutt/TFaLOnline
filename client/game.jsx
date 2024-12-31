@@ -25,12 +25,11 @@ const tickWav = require("../hosted/sound/tick.wav");
 //=================================================================================================
 
 //Helper method. Sends a get request to the server to see if the client is logged in or not -SJH
-const isLoggedInGet = async() => {
+const isLoggedInGet = async () => {
     const response = await fetch("isLoggedIn", {
         method: 'GET',
     });
     const jsonData = await response.json();
-    console.log(jsonData);
     return jsonData.loggedIn;
 }
 
@@ -53,26 +52,23 @@ const handleScore = async (newScore) => {
     const isLoggedIn = await isLoggedInGet();
 
     if (isLoggedIn) {
-        console.log("sending post to scoreboard");
         helper.sendPost('/scoreboard', { score: newScore });
-        console.log("updating number of games played");
-        fetch("/incrementGamesPlayed", {method: 'POST'});
+        fetch("/incrementGamesPlayed", { method: 'POST' });
     }
     else {
         //Check to see if the score is high enough to make it onto the leaderboard. 
         //If so, prompt for a manual submit. -SJH
         const response = await fetch('/getAllScores');
         const data = await response.json();
-        console.log(data);
         //Data is already in descending order. Only need to check the 10th element 
         //(index 9) to see if this score belongs on the leaderboard. -SJH
         //First, check to see if there's that much data in the scoreboard -SJH
-        if (data.highscores.length >= 10){
+        if (data.highscores.length >= 10) {
             if (data.highscores[9].score < newScore) {
                 showUsernamePrompt();
             }
         }
-        else{
+        else {
             showUsernamePrompt();
         }
     }
@@ -81,7 +77,7 @@ const handleScore = async (newScore) => {
 //When the user hits the submit button on the manual score submit, hide the manual 
 //submit menu and send the post request to submit a new score. -SJH
 const submitScoreManually = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const username = e.target.querySelector("#user").value;
     helper.sendPost('/scoreboard', { score: finalScore, username: username });
     helper.hideElement(e.target);
@@ -404,12 +400,12 @@ const populateSceneUIs = () => {
 
     //START SCENE STUFF-------------------------------------------------
     //Creating the title text----
-    let title = new PIXI.Text({text: "The Floor is (almost) Lava!"});
+    let title = new PIXI.Text({ text: "The Floor is (almost) Lava!" });
     title.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 50,
         fontFamily: "Verdana, Geneva, sans-serif",
-        stroke: {color: 0xF28305, width: 4},
+        stroke: { color: 0xF28305, width: 4 },
     });
     title.x = 65;
     title.y = 120;
@@ -418,7 +414,7 @@ const populateSceneUIs = () => {
 
     //Creating instructions for the game----
     let startLabel2 = new PIXI.Text(
-        {text:"Instructions: \n     Move using WASD or the arrow keys. \n     Avoid the lava."});
+        { text: "Instructions: \n     Move using WASD or the arrow keys. \n     Avoid the lava." });
     startLabel2.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 26,
@@ -430,7 +426,7 @@ const populateSceneUIs = () => {
     menuScene.addChild(startLabel2);
 
     //Creating and adding the start game button----
-    let startButton = new PIXI.Text({text:"Play!"});
+    let startButton = new PIXI.Text({ text: "Play!" });
     //Set button style----
     startButton.style = buttonStyle;
     //Button position----
@@ -486,13 +482,13 @@ const populateSceneUIs = () => {
     gameScene.addChild(lifeSymbol);
 
     //GAME OVER SCENE STUFF----------------------------------------------
-    let gameOverText = new PIXI.Text({text:"Game Over!"});
+    let gameOverText = new PIXI.Text({ text: "Game Over!" });
     //Creating a text style----
     let TextStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 50,
         fontFamily: "Verdana, Geneva, sans-serif",
-        stroke: {color: 0xF28305, width: 4}
+        stroke: { color: 0xF28305, width: 4 }
     });
     gameOverText.style = TextStyle;
     gameOverText.x = 270;
@@ -500,14 +496,14 @@ const populateSceneUIs = () => {
     gameOverScene.addChild(gameOverText);
 
     //Make the score display----
-    gameOverScoreLabel = new PIXI.Text({text:"Score: 0"});
+    gameOverScoreLabel = new PIXI.Text({ text: "Score: 0" });
     gameOverScoreLabel.style = TextStyle;
     gameOverScoreLabel.x = 300;
     gameOverScoreLabel.y = sceneHeight / 2;
     gameOverScene.addChild(gameOverScoreLabel) + 100;
 
     //Return to main menu button----
-    let mainMenuButton = new PIXI.Text({text:"Main Menu"});
+    let mainMenuButton = new PIXI.Text({ text: "Main Menu" });
     mainMenuButton.style = buttonStyle;
     mainMenuButton.x = 280;
     mainMenuButton.y = sceneHeight - 100;
@@ -582,8 +578,8 @@ const ScoreSubmitForm = (props) => {
             <h3>Your score is among the top 10!</h3>
             <p>It looks like you're not logged in. Would you like to submit your score to the scoreboad under an alias?</p>
             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="Enter Alias"/>
-            <input className="formSubmit" type="submit" value="Submit Score"/>
+            <input id="user" className="inlineBlock" type="text" name="username" placeholder="Enter Alias" />
+            <input className="formSubmit inlineBlock" type="submit" value="Submit" />
         </form>
     );
 };
@@ -595,8 +591,8 @@ const ScoreSubmitForm = (props) => {
 //Create the game canvas and put it on the HTML page -SJH
 const init = async () => {
     //Creating the manual submit form -SJH
-    const scoreSubmitContainer = createRoot(document.getElementById('scoreSubmitContainer'));
-    scoreSubmitContainer.render(<ScoreSubmitForm/>);
+    const scoreSubmitContainer = createRoot(document.getElementById('submitContainer'));
+    scoreSubmitContainer.render(<ScoreSubmitForm />);
 
     //Creating the pixijs app----
     app = new PIXI.Application();
@@ -605,8 +601,7 @@ const init = async () => {
     //Caching window dimensions -SJH
     sceneWidth = app.canvas.width;
     sceneHeight = app.canvas.height;
-
-    console.log("loading assets");
+    
     //Loading in images----
     PIXI.Assets.add({ alias: 'extraLifePng', src: extraLifePng });
     PIXI.Assets.add({ alias: 'extraScorePng', src: extraScorePng });

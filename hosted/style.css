@@ -6,29 +6,30 @@ html, body {
     overflow-x: hidden;
     background-color: rgb(28, 28, 28);
     color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #logo {
-    height: 40px;
-    width: 40;
-    padding-top: 5px;
+    height: 60px;
+    width: 60px;
     float:left;
     border-radius: 8px;
 }
 
 nav {
+    display: flex;
+    align-items: center;
     width: 100%;
     height: 70px;
     background-color: #ff7b00;
 }
 
 nav:nth-child(1) {
-    padding-left: 25px;
+    padding-left: 15px;
 }
 
 .navlink {
     padding: 5px;
-    padding-top: 12px;
     padding-left: 20px;
     color: white;
     font-size: 1.3em;
@@ -52,10 +53,12 @@ nav:nth-child(1) {
 }
 
 .mainForm {
-    height: 300px;
-    width: 350px;
-    margin: 0 auto;
-    padding-top: 10%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 8%;
     font-size: 1.2em;
 }
 
@@ -64,10 +67,6 @@ nav:nth-child(1) {
 }
 
 .mainForm label {
-    display: inline-block;
-    width: 100px;
-    margin-right: 10px;
-    text-align: right;
     font-size: 1.2em;
 }
 
@@ -75,16 +74,18 @@ nav:nth-child(1) {
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;
-    margin: 0 auto;
-    margin-top: 14px;
     font-size: 1.2em;
-    width: 100px;
     background-color: #ff7b00;
     border-radius: 2px;
     border-color: black;
-    padding: 3px 0px;
     color: white;
     text-decoration: none;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .formSubmit:link, .formSubmit:visited, .formSubmit:hover, .formSubmit:active {
@@ -96,9 +97,9 @@ nav:nth-child(1) {
     background-color: #ff5e00;
 }
 
-#user, #pass, #pass2 {
+#user, #pass, #pass2, label{
     text-align: center;
-    font-size: 1.1em;
+    font-size: 1.2em;
     width: 180px;
     border-radius: 6px;
 }
@@ -116,16 +117,83 @@ nav:nth-child(1) {
     text-align: center;
 }
 
-#speech {
-    height: 120px;
-    width: 250px;
-    z-index:300;
-}
-
 #errorMessage {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 1.2em;
     font-weight: bold;
     color: red;
     text-align: center;
+}
+
+#gameContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#submitContainer, .formContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#manualScoreSubmit{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    max-width: 500px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.inlineBlock{
+    display: inline-block;
+}
+
+.marginedSubmit{
+    margin-top: 3px;
+}
+
+.scoreList{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: start;
+    align-items: center;
+}
+
+.scoreNode{
+    display: flex;
+    justify-content: space-between;
+    margin-top: .5rem;
+    width: 600px;
+    border-radius: 4px;
+    background-color: #707070;
+}
+
+.lbUsername{
+    margin: 1rem;
+    text-align: left;
+}
+
+.lbScore{
+    margin: 1rem;
+    text-align: right;
+}
+
+#profileDisplay{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.profileDisplayContainer{
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
+#colorPicker{
+    margin-left: .5rem;
+    margin-bottom: 0;
 }

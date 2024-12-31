@@ -13,7 +13,6 @@ const getUserColor = async (req, res) => {
 
   const query = { username: req.body.username };
   const docs = await Profile.findOne(query).select('color premium').lean().exec();
-  console.log(docs);
 
   // If no user matches that username, return default color -SJH
   if (!docs) {

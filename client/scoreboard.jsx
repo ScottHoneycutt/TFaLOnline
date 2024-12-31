@@ -55,7 +55,6 @@ const ScoreList = (props) => {
                     body: JSON.stringify({username: data.highscores[i].username}),
                 });
                 const colorData = await colorRes.json();
-                console.log(colorData);
                 data.highscores[i].color = colorData.color;
             }
 
@@ -68,16 +67,16 @@ const ScoreList = (props) => {
 
     if (scores.length === 0) {
         return (
-            <div className="scoresList">
+            <div className="scoreList">
                 <h3 className="emptyScore">No scores Yet!</h3>
             </div>);
     }
     //Map the scores to HTML elements -SJH
     const scoreNodes = scores.map(score => {
         return (
-            <div style ={{backgroundColor: score.color}} key={score.id} className="score">
-                <h3 className="username">User: {score.username}</h3>
-                <h3 className="score">Score: {score.score}</h3>
+            <div style ={{backgroundColor: score.color}} key={score.id} className="scoreNode">
+                <h3 className="lbUsername">User: {score.username}</h3>
+                <h3 className="lbScore">Score: {score.score}</h3>
             </div>);
     });
     return (
